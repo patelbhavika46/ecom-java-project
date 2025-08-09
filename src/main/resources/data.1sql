@@ -1,0 +1,11 @@
+INSERT INTO product (name, desc, brand, price, category, release_date, is_available, quantity) VALUES
+('Model S', 'Electric luxury sedan', 'Tesla', 79999.99, 'Sedan', '2023-06-01', true, 10),
+('Mustang GT', 'High-performance sports coupe', 'Ford', 55999.00, 'Sports', '2022-09-15', true, 5),
+('Civic LX', 'Compact and fuel-efficient', 'Honda', 23999.95, 'Sedan', '2021-03-12', true, 20),
+('Camry SE', 'Mid-size family sedan', 'Toyota', 26999.50, 'Sedan', '2023-01-10', true, 15),
+('X5', 'Luxury mid-size SUV', 'BMW', 68999.99, 'SUV', '2022-07-08', true, 8),
+('CX-5', 'Compact SUV with sporty feel', 'Mazda', 30999.00, 'SUV', '2023-02-18', true, 12),
+('Wrangler', 'Iconic off-road SUV', 'Jeep', 41999.00, 'SUV', '2021-11-05', true, 6),
+('A4', 'Luxury compact sedan', 'Audi', 40999.00, 'Sedan', '2022-05-20', true, 9),
+('Altima', 'Reliable family car', 'Nissan', 25999.99, 'Sedan', '2023-03-25', true, 18),
+('Challenger', 'Muscle car with retro design', 'Dodge', 47999.00, 'Sports', '2020-08-17', false, 0);
