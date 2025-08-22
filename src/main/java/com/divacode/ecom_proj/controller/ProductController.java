@@ -71,7 +71,6 @@ public class ProductController {
         logger.info("product with id {}", id);
         Product product = productService.getProductById(id);
         byte[] imageFile = product.getImageData();
-        System.out.println(product);
         return ResponseEntity.ok().contentType(MediaType.valueOf(product.getImageType())).body(imageFile);
     }
 
