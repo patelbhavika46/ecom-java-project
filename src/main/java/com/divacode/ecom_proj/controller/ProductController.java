@@ -49,10 +49,13 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse<>(true, "Product created", product), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable int id, @Valid @RequestBody ProductDTO productDTO) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<Product>> updateProduct(
+            @PathVariable int id,
+            @Valid @RequestPart("productDTO") ProductDTO productDTO,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         logger.info("Updating product id {}", id);
-        Product product = productService.updateProduct(id, productDTO);
+        Product product = productService.updateProduct(id, productDTO, imageFile);
         return ResponseEntity.ok(new ApiResponse<>(true, "Product updated", product));
     }
 
@@ -61,5 +64,21 @@ public class ProductController {
         logger.info("Deleting product with id {}", id);
         productService.deleteProduct(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Product deleted", null));
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImageByProductId(@PathVariable int id) {
+        logger.info("product with id {}", id);
+        Product product = productService.getProductById(id);
+        byte[] imageFile = product.getImageData();
+        System.out.println(product);
+        return ResponseEntity.ok().contentType(MediaType.valueOf(product.getImageType())).body(imageFile);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<Product>>> searchProduct(@RequestParam String keyword) {
+        System.out.println("Searching with " + keyword);
+        List<Product> products = productService.searchProducts(keyword);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Searched Product...", products));
     }
 }

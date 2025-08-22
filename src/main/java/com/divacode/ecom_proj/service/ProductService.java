@@ -46,13 +46,22 @@ public class ProductService {
         return repo.save(product);
     }
 
-    public Product updateProduct(int id, ProductDTO productDTO) {
+    public Product updateProduct(int id, ProductDTO productDTO, MultipartFile imageFile) throws IOException {
         Product product = repo.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
         product.setName(productDTO.getName());
+        product.setBrand(productDTO.getBrand());
         product.setDesc(productDTO.getDesc());
         product.setPrice(productDTO.getPrice());
-        // set other fields
+        product.setCategory(productDTO.getCategory());
+        product.setQuantity(productDTO.getQuantity());
+        product.setIsAvailable(productDTO.getIsAvailable());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            product.setImageName(imageFile.getOriginalFilename());
+            product.setImageType(imageFile.getContentType());
+            product.setImageData(imageFile.getBytes());
+        }
         return repo.save(product);
     }
 
