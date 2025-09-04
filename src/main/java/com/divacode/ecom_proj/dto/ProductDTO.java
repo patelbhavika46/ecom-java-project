@@ -1,13 +1,18 @@
 package com.divacode.ecom_proj.dto;
 
+import com.opencsv.bean.CsvDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Min;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Setter
+@Getter
 public class ProductDTO {
     @NotBlank(message = "Name is required")
     private String name;
@@ -30,66 +35,10 @@ public class ProductDTO {
     private Integer quantity;
 
     @NotNull(message = "Release date is required")
+    @CsvDate("dd-MM-yyyy") // <-- Add this annotation
     private LocalDate releaseDate;
 
     @NotNull(message = "Available status is required")
     private Boolean isAvailable;
 
-    // Getters and Setters
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public Boolean getIsAvailable() {
-        return isAvailable;
-    }
-    public void setIsAvailable(Boolean isAvailable) {
-        this.isAvailable = isAvailable;
-    }
 }

@@ -8,9 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
-import java.util.Optional;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -73,5 +78,50 @@ public class ProductService {
 
     public List<Product> searchProducts(String keyword) {
         return repo.searchProducts(keyword);
+    }
+
+    public void saveProductsFromFile(MultipartFile file) throws Exception {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty");
+        }
+
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<ProductDTO> csvToBean = new CsvToBeanBuilder<ProductDTO>(reader)
+                    .withType(ProductDTO.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            List<ProductDTO> productDTOs = csvToBean.parse();
+
+            // Convert DTOs to Entities and save
+            List<Product> products = productDTOs.stream()
+                    .map(this::convertToProductEntity)
+                    .collect(Collectors.toList());
+
+            repo.saveAll(products);
+
+        } catch (Exception e) {
+            // Log the exception for debugging
+            throw new Exception("Failed to process CSV file: " + e.getMessage());
+        }
+    }
+
+    private Product convertToProductEntity(ProductDTO productDTO) {
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setDesc(productDTO.getDesc());
+        product.setBrand(productDTO.getBrand());
+        product.setPrice(productDTO.getPrice());
+        product.setCategory(productDTO.getCategory());
+        product.setReleaseDate(productDTO.getReleaseDate());
+        product.setIsAvailable(productDTO.getIsAvailable());
+        product.setQuantity(productDTO.getQuantity());
+
+        // Since the DTO doesn't have image properties, set them to null.
+        product.setImageName(null);
+        product.setImageType(null);
+        product.setImageData(null);
+
+        return product;
     }
 }
